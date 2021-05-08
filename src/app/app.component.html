@@ -1,0 +1,112 @@
+<nz-layout class="app-layout">
+  <nz-sider
+    class="menu-sidebar"
+    nzCollapsible
+    nzWidth="256px"
+    nzBreakpoint="md"
+    [(nzCollapsed)]="isCollapsed"
+    [nzTrigger]="null"
+  >
+    <div class="sidebar-logo">
+      <a href="https://ng.ant.design/" target="_blank">
+        <img src="https://ng.ant.design/assets/img/logo.svg" alt="logo" />
+        <h1>Ant Design Of Angular</h1>
+      </a>
+    </div>
+    <ul nz-menu [nzMode]="'inline'" nzTheme="dark" [nzInlineCollapsed]="isCollapsed">
+      <ng-container *ngFor="let item of fetchData.data">
+        <li
+          nz-submenu
+          *ngIf="item.children.length > 0"
+          routerLinkActive
+          #rla="routerLinkActive"
+          [nzOpen]="rla.isActive && !isCollapsed"
+        >
+          <span title
+            ><i nz-icon [nzType]="item.icon"></i> <span>{{ item.text }}</span>
+          </span>
+          <ul>
+            <ng-container *ngFor="let item2 of item.children">
+              <li
+                nz-submenu
+                routerLinkActive
+                #rla="routerLinkActive"
+                [nzOpen]="rla.isActive && !isCollapsed"
+                *ngIf="item2.children.length > 0"
+              >
+                <span title> {{ item2.text }} </span>
+                <ul>
+                  <ng-container *ngFor="let item3 of item2.children">
+                    <li
+                      nz-menu-item
+                      routerLinkActive
+                      #rla="routerLinkActive"
+                      [nzSelected]="rla.isActive"
+                      
+                      *ngIf="item3.children.length === 0"
+                    >
+                      <a
+                        [routerLink]="item3.link"
+                        routerLinkActive
+                        #rla="routerLinkActive"
+                      >
+                        {{ item3.text }}
+                      </a>
+                    </li>
+                  </ng-container>
+                </ul>
+              </li>
+              <li
+                nz-menu-item
+                routerLinkActive
+                #rla="routerLinkActive"
+                [nzSelected]="rla.isActive"
+                *ngIf="item2.children.length === 0"
+              >
+                <a
+                  [routerLink]="item2.link"
+                  routerLinkActive
+                  #rla="routerLinkActive"
+                >
+                  {{ item2.text }}
+                </a>
+              </li>
+            </ng-container>
+          </ul>
+        </li>
+        <li
+          *ngIf="item.children.length === 0"
+          nz-menu-item
+          routerLinkActive
+          #rla="routerLinkActive"
+          [nzSelected]="rla.isActive"
+        >
+          <a [routerLink]="item.link" routerLinkActive #rla="routerLinkActive">
+            <span title>
+              <i nz-icon [nzType]="item.icon"></i>
+              <span>{{ item.text }}</span>
+            </span>
+          </a>
+        </li>
+      </ng-container>
+    </ul>
+  </nz-sider>
+  <nz-layout>
+    <nz-header>
+      <div class="app-header">
+        <span class="header-trigger" (click)="isCollapsed = !isCollapsed">
+          <i
+            class="trigger"
+            nz-icon
+            [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
+          ></i>
+        </span>
+      </div>
+    </nz-header>
+    <nz-content>
+      <div class="inner-content">
+        <router-outlet></router-outlet>
+      </div>
+    </nz-content>
+  </nz-layout>
+</nz-layout>
